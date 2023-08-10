@@ -5,7 +5,10 @@ import Navbar from '../Navbar';
 import Register from '../RegisterPage';
 import Login from '../LoginPage';
 import { Link, Route, Routes, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
+axios.defaults.baseURL = 'http://localhost:3000';
+axios.defaults.withCredentials = true
 
 export default function App() {
     return (
