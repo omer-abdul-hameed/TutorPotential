@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./models');
 const app = express();
+const cookieParser = require ('cookie-parser')
 
 // CORS Configuration
 const corsOptions = {
@@ -13,8 +14,10 @@ const corsOptions = {
 
 // Middlewares
 app.use(cors(corsOptions));
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: false}));
 app.use(express.static(path.join(path.dirname(__dirname), 'frontend', 'dist')));
 
 // Routes
