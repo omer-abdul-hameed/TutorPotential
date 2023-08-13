@@ -70,6 +70,14 @@ const loginUser = async (req, res) => {
     console.log(error);
   }
 };
+//Logout
+const logoutUser = (req, res) => {
+  res.clearCookie('token'); 
+  return res.json({
+      message: "Logged out successfully"
+  });
+};
+
 //Profile
 const getProfile = (req, res) => {
   const { token } = req.cookies;
@@ -88,4 +96,5 @@ module.exports = {
   registerUser,
   loginUser,
   getProfile,
+  logoutUser 
 };
