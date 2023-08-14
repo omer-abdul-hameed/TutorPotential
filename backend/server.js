@@ -13,15 +13,15 @@ const corsOptions = {
 };
 
 // Middlewares
-app.use(cors(corsOptions));
+app.use(cors());
 // app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.urlencoded({ extended: false}));
+app.use(express.urlencoded({ extended: true}));
 app.use(express.static(path.join(path.dirname(__dirname), 'frontend', 'dist')));
 
 // Routes
-app.use('/', require('./routes/authRoutes'));
+app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/users', require('./controllers/users'));
 app.use('/api/students', require('./controllers/students'));
 app.use('/api/tutors', require('./controllers/tutors'));

@@ -11,9 +11,6 @@ import Dashboard from "../DashboardPage";
 import "bootstrap/dist/css/bootstrap.min.css"
 
 
-axios.defaults.baseURL = "http://localhost:3000";
-axios.defaults.withCredentials = true;
-
 export default function App() {
   return (
     <UserContextProvider>

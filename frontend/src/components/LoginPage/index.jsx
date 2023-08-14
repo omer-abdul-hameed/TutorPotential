@@ -29,7 +29,7 @@ export default function Login() {
         e.preventDefault();
         const { email, password } = data;
         try {
-            const { data: responseData } = await axios.post("/login", {
+            const { data: responseData } = await axios.post("api/auth/login", {
                 email,
                 password,
             });

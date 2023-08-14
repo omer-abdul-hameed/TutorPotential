@@ -77,7 +77,7 @@ export default function Dashboard() {
   const logout = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("/logout");
+      const response = await axios.get("api/auth/logout");
       if (response.data.message === "Logged out successfully") {
         window.location.href = "/login";
       } else {
