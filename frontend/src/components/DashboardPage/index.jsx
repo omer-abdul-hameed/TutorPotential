@@ -136,137 +136,198 @@ export default function Dashboard() {
       console.error("Error creating tutor profile:", error);
     }
   };
+  const deleteStudent = async () => {
+    if (!studentDetails || !studentDetails._id) {
+      console.error("Student details missing or student ID not found.");
+      return;
+    }
+
+    try {
+      const response = await axios.delete(
+        `/api/students/${studentDetails._id}`
+      );
+      if (response.status === 200) {
+        console.log("Student successfully deleted");
+        setStudentDetails(null); // Clear student details from the front-end after deletion
+      } else {
+        console.error("Error deleting student:", response.data);
+      }
+    } catch (error) {
+      console.error("Error deleting student:", error);
+    }
+  };
+
+  const deleteTutor = async () => {
+    if (!tutorDetails || !tutorDetails._id) {
+      console.error("Tutor details missing or tutor ID not found.");
+      return;
+    }
+
+    try {
+      const response = await axios.delete(`/api/tutors/${tutorDetails._id}`);
+      if (response.status === 200) {
+        console.log("Tutor successfully deleted");
+        setTutorDetails(null); // Clear tutor details from the front-end after deletion
+      } else {
+        console.error("Error deleting tutor:", response.data);
+      }
+    } catch (error) {
+      console.error("Error deleting tutor:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center py-8 relative">
-        {!!user && (
-            <>
-                <button
-                    onClick={logout}
-                    className="fixed top-4 right-4 bg-gray-400 text-white px-4 py-2 rounded-full hover:bg-gray-500 transition"
-                    disabled={loading}
-                >
-                    Logout
-                </button>
-                <div className="w-full max-w-3xl bg-white p-6 rounded-lg shadow-md">
-                    <h1 className="text-4xl font-semibold mb-6 border-b-2 border-blue-500 pb-4">
-                        Dashboard
-                    </h1>
-                    <h2 className="text-3xl mb-4">Welcome {user.name}!</h2>
-                    <p className="text-xl mb-6">Email: {user.email}</p>
+      {!!user && (
+        <>
+          <button
+            onClick={logout}
+            className="fixed top-4 right-4 bg-gray-400 text-white px-4 py-2 rounded-full hover:bg-gray-500 transition"
+            disabled={loading}
+          >
+            Logout
+          </button>
+          <div className="w-full max-w-3xl bg-white p-6 rounded-lg shadow-md">
+            <h1 className="text-4xl font-semibold mb-6 border-b-2 border-blue-500 pb-4">
+              Dashboard
+            </h1>
+            <h2 className="text-3xl mb-4">Welcome {user.name}!</h2>
+            <p className="text-xl mb-6">Email: {user.email}</p>
 
-                    {!studentDetails && !tutorDetails ? (
-                        <div className="space-y-6">
-                            <div>
-                                <h3 className="text-2xl mb-4">Create Student Profile</h3>
-                                <div className="flex space-x-4 mb-4">
-                                    <input
-                                        type="text"
-                                        value={currentSubjectStudent}
-                                        onChange={(e) => setCurrentSubjectStudent(e.target.value)}
-                                        placeholder="Type a subject and add"
-                                        className="p-2 border rounded w-full"
-                                    />
-                                    <button type="button" onClick={addSubjectToStudent} className="bg-blue-500 text-white p-2 rounded">
-                                        Add
-                                    </button>
-                                </div>
-                                <ul className="list-disc pl-6">
-                                    {studentForm.subjectsOfInterest.map((subject, index) => (
-                                        <li key={index}>{subject}</li>
-                                    ))}
-                                </ul>
-                                <input
-                                    type="text"
-                                    name="gradeLevel"
-                                    value={studentForm.gradeLevel}
-                                    onChange={(e) => handleInputChange(e, setStudentForm)}
-                                    placeholder="Grade Level"
-                                    className="mt-4 p-2 border rounded w-full"
-                                />
-                                <button
-                                    onClick={createStudent}
-                                    className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition block w-full"
-                                >
-                                    Save Student Profile
-                                </button>
-                            </div>
-
-                            <div>
-                                <h3 className="text-2xl mb-4">Create Tutor Profile</h3>
-                                <div className="flex space-x-4 mb-4">
-                                    <input
-                                        type="text"
-                                        value={currentSubjectTutor}
-                                        onChange={(e) => setCurrentSubjectTutor(e.target.value)}
-                                        placeholder="Type a subject and add"
-                                        className="p-2 border rounded w-full"
-                                    />
-                                    <button type="button" onClick={addSubjectToTutor} className="bg-blue-500 text-white p-2 rounded">
-                                        Add
-                                    </button>
-                                </div>
-                                <ul className="list-disc pl-6 mb-4">
-                                    {tutorForm.subjectsTaught.map((subject, index) => (
-                                        <li key={index}>{subject}</li>
-                                    ))}
-                                </ul>
-                                <input
-                                    type="text"
-                                    name="rates"
-                                    value={tutorForm.rates}
-                                    onChange={(e) => handleInputChange(e, setTutorForm)}
-                                    placeholder="Rates"
-                                    className="p-2 border rounded w-full"
-                                />
-                                <input
-                                    type="text"
-                                    name="areaOfOperation"
-                                    value={tutorForm.areaOfOperation}
-                                    onChange={(e) => handleInputChange(e, setTutorForm)}
-                                    placeholder="Area of Operation"
-                                    className="mt-4 p-2 border rounded w-full"
-                                />
-                                <button
-                                    onClick={createTutor}
-                                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition block w-full"
-                                >
-                                    Save Tutor Profile
-                                </button>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="space-y-6">
-                            {studentDetails && (
-                                <div>
-                                    <h3 className="text-2xl mb-4">Student Profile</h3>
-                                    <p className="text-lg mb-2">Grade Level: {studentDetails.gradeLevel}</p>
-                                    <p className="text-lg">
-                                        Subjects of Interest: {studentDetails.subjectsOfInterest.join(", ")}
-                                    </p>
-                                </div>
-                            )}
-
-                            {tutorDetails && (
-                                <div>
-                                    <h3 className="text-2xl mb-4">Tutor Profile</h3>
-                                    <p className="text-lg mb-2">
-                                        Subjects Taught: {tutorDetails.subjectsTaught.join(", ")}
-                                    </p>
-                                    <p className="text-lg mb-2">Rate: ${tutorDetails.rates} / hr</p>
-                                    <p className="text-lg">Area of Operation: {tutorDetails.areaOfOperation}</p>
-                                </div>
-                            )}
-                        </div>
-                    )}
+            {!studentDetails && !tutorDetails ? (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-2xl mb-4">Create Student Profile</h3>
+                  <div className="flex space-x-4 mb-4">
+                    <input
+                      type="text"
+                      value={currentSubjectStudent}
+                      onChange={(e) => setCurrentSubjectStudent(e.target.value)}
+                      placeholder="Type a subject and add"
+                      className="p-2 border rounded w-full"
+                    />
+                    <button
+                      type="button"
+                      onClick={addSubjectToStudent}
+                      className="bg-blue-500 text-white p-2 rounded"
+                    >
+                      Add
+                    </button>
+                  </div>
+                  <ul className="list-disc pl-6">
+                    {studentForm.subjectsOfInterest.map((subject, index) => (
+                      <li key={index}>{subject}</li>
+                    ))}
+                  </ul>
+                  <input
+                    type="text"
+                    name="gradeLevel"
+                    value={studentForm.gradeLevel}
+                    onChange={(e) => handleInputChange(e, setStudentForm)}
+                    placeholder="Grade Level"
+                    className="mt-4 p-2 border rounded w-full"
+                  />
+                  <button
+                    onClick={createStudent}
+                    className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition block w-full"
+                  >
+                    Save Student Profile
+                  </button>
                 </div>
-            </>
-        )}
+
+                <div>
+                  <h3 className="text-2xl mb-4">Create Tutor Profile</h3>
+                  <div className="flex space-x-4 mb-4">
+                    <input
+                      type="text"
+                      value={currentSubjectTutor}
+                      onChange={(e) => setCurrentSubjectTutor(e.target.value)}
+                      placeholder="Type a subject and add"
+                      className="p-2 border rounded w-full"
+                    />
+                    <button
+                      type="button"
+                      onClick={addSubjectToTutor}
+                      className="bg-blue-500 text-white p-2 rounded"
+                    >
+                      Add
+                    </button>
+                  </div>
+                  <ul className="list-disc pl-6 mb-4">
+                    {tutorForm.subjectsTaught.map((subject, index) => (
+                      <li key={index}>{subject}</li>
+                    ))}
+                  </ul>
+                  <input
+                    type="text"
+                    name="rates"
+                    value={tutorForm.rates}
+                    onChange={(e) => handleInputChange(e, setTutorForm)}
+                    placeholder="Rates"
+                    className="p-2 border rounded w-full"
+                  />
+                  <input
+                    type="text"
+                    name="areaOfOperation"
+                    value={tutorForm.areaOfOperation}
+                    onChange={(e) => handleInputChange(e, setTutorForm)}
+                    placeholder="Area of Operation"
+                    className="mt-4 p-2 border rounded w-full"
+                  />
+                  <button
+                    onClick={createTutor}
+                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition block w-full"
+                  >
+                    Save Tutor Profile
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {studentDetails && (
+                  <div>
+                    <h3 className="text-2xl mb-4">Student Profile</h3>
+                    <p className="text-lg mb-2">
+                      Grade Level: {studentDetails.gradeLevel}
+                    </p>
+                    <p className="text-lg">
+                      Subjects of Interest:{" "}
+                      {studentDetails.subjectsOfInterest.join(", ")}
+                    </p>
+                    <button
+                      onClick={deleteStudent}
+                      className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline-red active:bg-red-700"
+                    >
+                      Delete Student Profile
+                    </button>
+                  </div>
+                )}
+
+                {tutorDetails && (
+                  <div>
+                    <h3 className="text-2xl mb-4">Tutor Profile</h3>
+                    <p className="text-lg mb-2">
+                      Subjects Taught: {tutorDetails.subjectsTaught.join(", ")}
+                    </p>
+                    <p className="text-lg mb-2">
+                      Rate: ${tutorDetails.rates} / hr
+                    </p>
+                    <p className="text-lg">
+                      Area of Operation: {tutorDetails.areaOfOperation}
+                    </p>
+                    <button
+                      onClick={deleteTutor}
+                      className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline-red active:bg-red-700"
+                    >
+                      Delete Tutor Profile
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
-);
-
-
-
-
-
+  );
 }
