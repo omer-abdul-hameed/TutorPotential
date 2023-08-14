@@ -10,15 +10,23 @@ const userSchema = new Schema({
         type: String,
         unique: true,
         required: true,
-        match: [/\S+@\S+\.\S+/, 'is invalid'], // Simple email validation
+        match: [/\S+@\S+\.\S+/, 'is invalid'],
         sparse: true
     },
     password: {
         type: String,
         required: true
+    },
+    student: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Student'
+    },
+    tutor: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tutor'
     }
 }, {
-    timestamps: true  // This will add the createdAt and updatedAt fields
+    timestamps: true
 });
 
 const UserModel = mongoose.model('User', userSchema);

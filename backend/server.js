@@ -23,6 +23,8 @@ app.use(express.static(path.join(path.dirname(__dirname), 'frontend', 'dist')));
 // Routes
 app.use('/', require('./routes/authRoutes'));
 app.use('/api/users', require('./controllers/users'));
+app.use('/api/students', require('./controllers/students'));
+app.use('/api/tutors', require('./controllers/tutors'));
 
 // SPA Fallback for unmatched routes
 app.get('*', (req, res) => {
