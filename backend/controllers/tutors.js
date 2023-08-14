@@ -13,15 +13,37 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/me', async (req, res) => {
     try {
-        const tutor = await db.Tutor.findById(req.params.id);
-        res.json(tutor);
+        // Check if authorization header exists
+        if (!req.headers.authorization) {
+            return res.status(401).send("Authorization header missing");
+        }
+
+        // Extract the token
+        const token = req.headers.authorization.split(" ")[1];
+
+        // Decode the token to get the user ID
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decodedToken.id;
+
+        // Find the tutor with a matching user property
+        const tutor = await db.Tutor.findOne({ user: userId });
+
+        if (tutor) {
+            res.json(tutor);
+        } else {
+            res.status(404).send("Tutor not found for the provided user ID");
+        }
     } catch (error) {
-        console.error("Error fetching tutor:", error);
-        res.status(500).send("Error fetching tutor");
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).send("Invalid token");
+        }
+        console.error("Error fetching tutor by user:", error);
+        res.status(500).send("Error fetching tutor by user");
     }
 });
+
 
 router.post('/', async (req, res) => {
     try {

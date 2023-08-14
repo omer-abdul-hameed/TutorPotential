@@ -13,13 +13,34 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/me', async (req, res) => {
     try {
-        const student = await db.Student.findById(req.params.id);
-        res.json(student);
+        // Check if authorization header exists
+        if (!req.headers.authorization) {
+            return res.status(401).send("Authorization header missing");
+        }
+
+        // Extract the token
+        const token = req.headers.authorization.split(" ")[1];
+
+        // Decode the token to get the user ID
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decodedToken.id;
+
+        // Find the student with a matching user property
+        const student = await db.Student.findOne({ user: userId });
+
+        if (student) {
+            res.json(student);
+        } else {
+            res.status(404).send("Student not found for the provided user ID");
+        }
     } catch (error) {
-        console.error("Error fetching student:", error);
-        res.status(500).send("Error fetching student");
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).send("Invalid token");
+        }
+        console.error("Error fetching student by user:", error);
+        res.status(500).send("Error fetching student by user");
     }
 });
 
