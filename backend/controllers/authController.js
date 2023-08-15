@@ -1,13 +1,17 @@
-const User = require("../models/user");
-const { hashPassword, comparePassword } = require("../helpers/auth");
+const express = require('express');
+const router = express.Router();
+const db = require('../models'); 
+const { hashPassword, comparePassword } = require("../helpers/hash");
 const jwt = require("jsonwebtoken");
 
-const test = (req, res) => {
-  res.json("test is working");
-};
 
-//Register
-const registerUser = async (req, res) => {
+// Test Route
+router.get('/', (req, res) => {
+  res.json("test is working");
+});
+
+// Register
+router.post('/register', async (req, res) => {
   try {
     const { name, email, password } = req.body;
     if (!name) {
@@ -20,14 +24,14 @@ const registerUser = async (req, res) => {
         error: "Password is required and needs to be 6 characters or longer",
       });
     }
-    const exist = await User.findOne({ email });
+    const exist = await db.User.findOne({ email });
     if (exist) {
       return res.json({
         error: "This email is already in use",
       });
     }
     const hashedPassword = await hashPassword(password);
-    const user = await User.create({
+    const user = await db.User.create({
       name,
       email,
       password: hashedPassword,
@@ -36,14 +40,14 @@ const registerUser = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
-};
+});
 
 // Login
-const loginUser = async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await db.User.findOne({ email });
     if (!user) {
       return res.json({
         error: "User not found!",
@@ -69,17 +73,18 @@ const loginUser = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
-};
-//Logout
-const logoutUser = (req, res) => {
+});
+
+// Logout
+router.get('/logout', (req, res) => {
   res.clearCookie('token'); 
   return res.json({
       message: "Logged out successfully"
   });
-};
+});
 
-//Profile
-const getProfile = (req, res) => {
+// Profile
+router.get('/profile', (req, res) => {
   const { token } = req.cookies;
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, {}, (err, user) => {
@@ -89,12 +94,6 @@ const getProfile = (req, res) => {
   } else {
     res.json(null);
   }
-};
+});
 
-module.exports = {
-  test,
-  registerUser,
-  loginUser,
-  getProfile,
-  logoutUser 
-};
+module.exports = router;

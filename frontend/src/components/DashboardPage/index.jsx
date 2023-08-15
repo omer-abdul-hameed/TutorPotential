@@ -1,11 +1,14 @@
 import React, { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { UserContext } from "../../components/User";
-import StudentInfo from "../Student"; // Ensure the path is correct
-import TutorInfo from "../Tutor"; // Ensure the path is correct
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import StudentInfo from "../Student";
+import TutorInfo from "../Tutor";
 
 export default function Dashboard() {
-  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
+  const { user, setUser } = useContext(UserContext);
   const [studentDetails, setStudentDetails] = useState(null);
   const [tutorDetails, setTutorDetails] = useState(null);
 
@@ -26,20 +29,36 @@ export default function Dashboard() {
         return;
       }
 
-      // Set axios default headers
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
-      // Fetch student using the user ID
       const studentRes = await axios.get("/api/students/me");
       setStudentDetails(studentRes.data);
 
-      // Similarly, fetch tutor using the user ID
       const tutorRes = await axios.get("/api/tutors/me");
       setTutorDetails(tutorRes.data);
     } catch (error) {
       console.error("Error fetching details:", error);
     }
   };
+  const deleteProfile = async () => {
+    try {
+      const response = await axios.delete(`/api/users/${user._id}`);
+      if (response.status === 200) {
+        console.log("Profile successfully deleted");
+        setUser(null);  // Update user context
+        setStudentDetails(null);  // Clear student details
+        setTutorDetails(null);  // Clear tutor details
+        toast.success("Account deleted");
+        navigate("/login");
+      } else {
+        console.error("Error deleting profile:", response.data);
+        toast.error("Error deleting profile. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error deleting profile:", error);
+      toast.error("Error deleting profile. Please try again.");
+    }
+};
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center py-8 relative">
@@ -50,25 +69,41 @@ export default function Dashboard() {
           </h1>
           <h2 className="text-3xl mb-4">Welcome {user.name}!</h2>
           <p className="text-xl mb-6">Email: {user.email}</p>
-  
-          {(!studentDetails && !tutorDetails) && (
+
+          {!studentDetails && !tutorDetails && (
             <>
-              <StudentInfo studentDetails={null} setStudentDetails={setStudentDetails} />
-              <TutorInfo tutorDetails={null} setTutorDetails={setTutorDetails} />
+              <StudentInfo
+                studentDetails={null}
+                setStudentDetails={setStudentDetails}
+              />
+              <TutorInfo
+                tutorDetails={null}
+                setTutorDetails={setTutorDetails}
+              />
             </>
           )}
-  
+
           {studentDetails && !tutorDetails && (
-            <StudentInfo studentDetails={studentDetails} setStudentDetails={setStudentDetails} />
+            <StudentInfo
+              studentDetails={studentDetails}
+              setStudentDetails={setStudentDetails}
+            />
           )}
-  
+
           {!studentDetails && tutorDetails && (
-            <TutorInfo tutorDetails={tutorDetails} setTutorDetails={setTutorDetails} />
+            <TutorInfo
+              tutorDetails={tutorDetails}
+              setTutorDetails={setTutorDetails}
+            />
           )}
         </div>
       )}
+      <button
+        onClick={deleteProfile}
+        className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline-red active:bg-red-700 mt-4 ml-4"
+      >
+        Delete Profile
+      </button>
     </div>
   );
-  
-
-          }  
+}

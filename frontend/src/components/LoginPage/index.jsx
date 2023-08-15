@@ -38,6 +38,7 @@ export default function Login() {
             } else {
                 setUser(responseData); 
                 setData({});
+                toast.success("Login Successful");
                 navigate("/dashboard");
             }
         } catch (error) {
