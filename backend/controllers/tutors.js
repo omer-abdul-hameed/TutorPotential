@@ -33,7 +33,8 @@ router.get('/me', async (req, res) => {
         if (tutor) {
             res.json(tutor);
         } else {
-            res.status(404).send("Tutor not found for the provided user ID");
+            // Return null if the tutor is not found
+            res.json(null);
         }
     } catch (error) {
         if (error.name === 'JsonWebTokenError') {

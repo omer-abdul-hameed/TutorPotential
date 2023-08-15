@@ -33,7 +33,8 @@ router.get('/me', async (req, res) => {
         if (student) {
             res.json(student);
         } else {
-            res.status(404).send("Student not found for the provided user ID");
+            // Return null if the student is not found
+            res.json(null);
         }
     } catch (error) {
         if (error.name === 'JsonWebTokenError') {
@@ -43,6 +44,7 @@ router.get('/me', async (req, res) => {
         res.status(500).send("Error fetching student by user");
     }
 });
+
 
 router.post('/', async (req, res) => {
     try {
