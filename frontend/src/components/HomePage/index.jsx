@@ -19,7 +19,6 @@ export default function HomePage() {
         <p>At TutorPotential, we believe in individualized learning. Our tutors are passionate about helping students succeed.</p>
       </section>
 
-      {/* Tutor Profiles/ Carousel  */}
       <section id="tutors" className="mb-10">
         <h2 className="text-3xl font-semibold mb-4">Meet Our Tutors</h2>
         <div className="tutor-profile bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
@@ -29,7 +28,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials */}
       <section id="testimonials">
         <h2 className="text-3xl font-semibold mb-4">What Our Students Say</h2>
         <blockquote className="bg-white p-6 rounded-lg shadow-lg italic">

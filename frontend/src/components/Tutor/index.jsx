@@ -199,7 +199,7 @@ const handleEditInputChange = (e) => {
             name="rates"
             value={tutorForm.rates}
             onChange={(e) => handleInputChange(e, setTutorForm)}
-            placeholder="Rates"
+            placeholder='Cost per hour'
             className="p-2 border rounded w-full"
           />
           <input
@@ -207,7 +207,7 @@ const handleEditInputChange = (e) => {
             name="areaOfOperation"
             value={tutorForm.areaOfOperation}
             onChange={(e) => handleInputChange(e, setTutorForm)}
-            placeholder="Area of Operation"
+            placeholder='Enter Zip or City'
             className="mt-4 p-2 border rounded w-full"
           />
           <button
@@ -296,7 +296,7 @@ const handleEditInputChange = (e) => {
             name="rates"
             value={editFormData.rates}
             onChange={handleEditInputChange}
-            placeholder="Rates"
+            placeholder='Cost per hour'
             className="p-2 border rounded w-full"
         />
         
@@ -305,7 +305,7 @@ const handleEditInputChange = (e) => {
             name="areaOfOperation"
             value={editFormData.areaOfOperation}
             onChange={handleEditInputChange}
-            placeholder="Area of Operation"
+            placeholder='Enter Zip or City'
             className="mt-4 p-2 border rounded w-full"
         />
 

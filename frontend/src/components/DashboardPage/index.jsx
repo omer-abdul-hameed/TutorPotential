@@ -45,9 +45,7 @@ export default function Dashboard() {
       const response = await axios.delete(`/api/users/${user._id}`);
       if (response.status === 200) {
         console.log("Profile successfully deleted");
-        setUser(null);  // Update user context
-        setStudentDetails(null);  // Clear student details
-        setTutorDetails(null);  // Clear tutor details
+        setUser(null); 
         toast.success("Account deleted");
         navigate("/login");
       } else {
