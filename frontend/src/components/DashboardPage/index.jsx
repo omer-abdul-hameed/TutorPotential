@@ -74,20 +74,6 @@ export default function Dashboard() {
     setCurrentSubjectTutor("");
   };
 
-  const logout = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get("api/auth/logout");
-      if (response.data.message === "Logged out successfully") {
-        window.location.href = "/login";
-      } else {
-        console.error("Error logging out");
-      }
-    } catch (error) {
-      console.error("There was an error logging out:", error);
-    }
-    setLoading(false);
-  };
 
   const createStudent = async () => {
     try {
@@ -180,13 +166,6 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center py-8 relative">
       {!!user && (
         <>
-          <button
-            onClick={logout}
-            className="fixed top-4 right-4 bg-gray-400 text-white px-4 py-2 rounded-full hover:bg-gray-500 transition"
-            disabled={loading}
-          >
-            Logout
-          </button>
           <div className="w-full max-w-3xl bg-white p-6 rounded-lg shadow-md">
             <h1 className="text-4xl font-semibold mb-6 border-b-2 border-blue-500 pb-4">
               Dashboard
