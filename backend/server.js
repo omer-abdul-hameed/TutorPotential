@@ -26,6 +26,10 @@ app.use('/api/users', require('./controllers/users'));
 app.use('/api/students', require('./controllers/students'));
 app.use('/api/tutors', require('./controllers/tutors'));
 
+// use the React build folder for static files
+app.use(express.static(path.join(path.dirname(__dirname), 'frontend', 'dist')))
+
+
 // SPA Fallback for unmatched routes
 app.get('*', (req, res) => {
     res.sendFile(path.join(path.dirname(__dirname), 'frontend', 'dist', 'index.html'));
