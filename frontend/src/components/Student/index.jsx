@@ -8,8 +8,15 @@ export default function StudentInfo({ studentDetails, setStudentDetails }) {
     gradeLevel: "",
     subjectsOfInterest: [],
   });
+
+  const [editFormData, setEditFormData] = useState({
+    gradeLevel: "",
+    subjectsOfInterest: [],
+  });
+
   const [currentSubjectStudent, setCurrentSubjectStudent] = useState("");
-  const [showCreateForm, setShowCreateForm] = useState(false);  // Added this state
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
   useEffect(() => {
     async function fetchStudentDetails() {
         try {
@@ -38,25 +45,37 @@ export default function StudentInfo({ studentDetails, setStudentDetails }) {
 }, []);
 
 
-  const handleInputChange = (e, setter) => {
+const handleInputChange = (e, setter) => {
     setter((prevState) => ({ ...prevState, [e.target.name]: e.target.value }));
   };
 
   const addSubjectToStudent = () => {
+    const updatedSubjects = [...studentForm.subjectsOfInterest, currentSubjectStudent];
+
     setStudentForm((prevState) => ({
-      ...prevState,
-      subjectsOfInterest: [
-        ...prevState.subjectsOfInterest,
-        currentSubjectStudent,
-      ],
+        ...prevState,
+        subjectsOfInterest: updatedSubjects,
     }));
+
+    setEditFormData((prevState) => ({
+        ...prevState,
+        subjectsOfInterest: updatedSubjects,
+    }));
+
     setCurrentSubjectStudent("");
   };
 
   const removeSubjectFromStudent = (subject) => {
+    const updatedSubjects = studentForm.subjectsOfInterest.filter((s) => s !== subject);
+
     setStudentForm((prevState) => ({
-      ...prevState,
-      subjectsOfInterest: prevState.subjectsOfInterest.filter((s) => s !== subject),
+        ...prevState,
+        subjectsOfInterest: updatedSubjects,
+    }));
+
+    setEditFormData((prevState) => ({
+        ...prevState,
+        subjectsOfInterest: updatedSubjects,
     }));
   };
 
@@ -80,6 +99,27 @@ export default function StudentInfo({ studentDetails, setStudentDetails }) {
     } catch (error) {
       console.error("Error creating student profile:", error);
     }
+  };
+  const editStudent = async (studentId, studentData) => {
+    try {
+      const response = await axios.put(`/api/students/${studentId}`, studentData);
+      if (response.status === 200) {
+        console.log("Student updated successfully:", response.data);
+        setStudentDetails(response.data);
+        setShowEditForm(false);
+      } else {
+        console.error("Error updating the student:", response.data);
+      }
+    } catch (error) {
+      console.error("Error updating the student:", error);
+    }
+  };
+
+  const handleEditInputChange = (e) => {
+    setEditFormData((prevState) => ({
+        ...prevState,
+        [e.target.name]: e.target.value
+    }));
   };
 
   const deleteStudent = async () => {
@@ -158,7 +198,7 @@ export default function StudentInfo({ studentDetails, setStudentDetails }) {
         </div>
       )}
 
-      {studentDetails && (
+      {studentDetails && !showEditForm && (
         <div>
           <h3 className="text-2xl mb-4">Student Profile</h3>
           <p className="text-lg mb-2">
@@ -174,9 +214,76 @@ export default function StudentInfo({ studentDetails, setStudentDetails }) {
           >
             Delete Student Profile
           </button>
+          <button
+            onClick={() => {
+                setEditFormData({
+                    gradeLevel: studentDetails.gradeLevel,
+                    subjectsOfInterest: studentDetails.subjectsOfInterest
+                });
+                setShowEditForm(true);
+            }}
+            className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline-yellow active:bg-yellow-700"
+          >
+            Edit Student Profile
+          </button>
+        </div>
+      )}
+
+      {showEditForm && (
+        <div>
+          <h3 className="text-2xl mb-4">Edit Student Profile</h3>
+          <div className="flex space-x-4 mb-4">
+            <input
+                type="text"
+                value={currentSubjectStudent}
+                onChange={(e) => setCurrentSubjectStudent(e.target.value)}
+                placeholder="Type a subject and add"
+                className="p-2 border rounded w-full"
+            />
+            <button
+                type="button"
+                onClick={addSubjectToStudent}
+                className="bg-blue-500 text-white p-2 rounded"
+            >
+                Add
+            </button>
+          </div>
+          <ul className="list-disc pl-6">
+            {editFormData.subjectsOfInterest.map((subject, index) => (
+                <li key={index}>
+                    {subject}
+                    <button
+                        onClick={() => removeSubjectFromStudent(subject)}
+                        className="ml-2 text-red-500"
+                    >
+                        Remove
+                    </button>
+                </li>
+            ))}
+          </ul>
+          <input
+            type="text"
+            name="gradeLevel"
+            value={editFormData.gradeLevel}
+            onChange={handleEditInputChange}
+            placeholder="Grade Level"
+            className="mt-4 p-2 border rounded w-full"
+          />
+          <button
+            onClick={() => editStudent(studentDetails._id, editFormData)}
+            className="mt-4 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition block w-full"
+          >
+            Update Student Profile
+          </button>
+          <button
+            onClick={() => setShowEditForm(false)}
+            className="mt-4 bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400 transition block w-full"
+          >
+            Cancel
+          </button>
         </div>
       )}
     </div>
-  );
+);
 }
 
