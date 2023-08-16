@@ -86,7 +86,24 @@ The following technologies were utilized in the development of **TutorPotential*
 
 3. **Google Maps API:** Due to time constraints, we were unable to integrate the Google Maps API. However, we plan to add this feature in future updates.
 
+# Route Table
 
+| URL                | REST ROUTE | HTTP Verb | CRUD Action | Template Files         |
+|--------------------|------------|-----------|-------------|------------------------|
+| /                  |            | GET       | read        | components/HomePage    |
+| api/students       | index      | GET       | read        | components/StudentPage |
+| api/students/:id   | show       | GET       | read        | components/StudentPage |
+| api/students/:id   | edit       | PUT       | update      | components/Student     |
+| api/students/:id   | delete     | Delete    | destroy     | components/Student     |
+| api/auth/register  | new        | POST      |             | components/Register    |
+| api/auth/login     | new        | POST      | create      | components/Login       |
+| api/auth/users/:id | edit       | PUT       | update      | components/Dashboard   |
+| api/auth/users/:id | destroy    | DELETE    | destroy     | components/Dashboard   |
+| api/tutors         | index      | GET       | read        | components/TutorsPage  |
+| api/tutors/:id     | show       | GET       | read        | components/TutorsPage  |
+| api/tutor/:id      | edit       | PUT       | update      | components/Tutor       |
+| api/tutor/:id      | delete     | Delete    | destroy     | components/Tutor       |
+| /*                 |            | GET       |             |                        |
 
 
 # ERD
