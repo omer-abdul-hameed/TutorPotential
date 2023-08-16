@@ -3,15 +3,16 @@ const jwt = require('jsonwebtoken');
 const db = require('../models');
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
     try {
-        const tutors = await db.Tutor.find({});
-        res.json(tutors);
+      const tutors = await db.Tutor.find({}).populate("user", "name email").exec();
+      res.json(tutors);
     } catch (error) {
-        console.error("Error fetching tutors:", error);
-        res.status(500).send("Error fetching tutors");
+      console.error("Error fetching tutors:", error);
+      res.status(500).send("Error fetching tutors");
     }
-});
+  });
+  
 
 router.get('/me', async (req, res) => {
     try {

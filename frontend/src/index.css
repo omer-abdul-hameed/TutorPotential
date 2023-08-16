@@ -2,44 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
-
-.App {
-    background-color: white;
-  }
-  
-  .Auth-form-container {
+body {
+  background-color: rgba(31,42,54); 
+  margin: 0;
+}
+.Auth-form-container {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100vw;
     height: 100vh;
-  }
-  
-  .Auth-form {
+}
+
+.Auth-form {
     width: 420px;
     box-shadow: rgb(0 0 0 / 16%) 1px 1px 10px;
     padding-top: 30px;
     padding-bottom: 20px;
     border-radius: 8px;
-    background-color: white;
-  }
-  
-  .Auth-form-content {
+    background-color: rgba(75, 85, 99, 0.7); 
+    backdrop-filter: blur(15px); 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+}
+
+.Auth-form-content {
     padding-left: 12%;
     padding-right: 12%;
-  }
-  
-  .Auth-form-title {
+}
+
+.Auth-form-title {
     text-align: center;
     margin-bottom: 1rem;
     font-size: 24px;
-    color: rgb(34, 34, 34);
-    font-weight: 800;
-  }
-  
-  label {
+    color:white;
+    font-weight: 600;
+}
+
+label {
     font-size: 14px;
     font-weight: 600;
     color: rgb(34, 34, 34);
-  }
-  
+}
+li {
+  display: flex;
+  align-items: center;
+}
+

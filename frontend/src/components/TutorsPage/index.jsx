@@ -6,7 +6,7 @@ export default function TutorIndex() {
     const [tutors, setTutors] = useState([]);
 
     useEffect(() => {
-        async function fetchTutors() {
+        const fetchTutors = async () => {
             try {
                 const response = await axios.get("/api/tutors");
                 setTutors(response.data);
@@ -14,18 +14,22 @@ export default function TutorIndex() {
                 toast.error("Error fetching tutors");
                 console.error("Error fetching tutors:", error);
             }
-        }
+        };
 
         fetchTutors();
     }, []);
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <h2 className="text-2xl font-bold mb-6">Tutors</h2>
+        <div className="container mx-auto px-4 py-8 bg-gray-800 min-h-screen">
+            <h2 className="text-2xl font-bold mb-6 text-white text-center">Tutors</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {tutors.map(tutor => (
-                    <div key={tutor._id} className="tutor-card bg-white shadow-lg rounded-lg p-6">
-                        <h3 className="text-xl font-semibold mb-4">User ID: {tutor.user}</h3>
+                    <div 
+                        key={tutor._id} 
+                        className="tutor-card bg-gray-700 bg-opacity-70 shadow-lg rounded-lg p-6 backdrop-blur-md text-gray-300"
+                    >
+                        <h3 className="text-xl font-semibold mb-4">{tutor.user.name}</h3>
+                        <p className="mb-4">{tutor.user.email}</p>
                         <p className="font-semibold mb-2">Subjects Taught:</p>
                         <ul className="list-disc pl-4">
                             {tutor.subjectsTaught.map((subject, index) => (

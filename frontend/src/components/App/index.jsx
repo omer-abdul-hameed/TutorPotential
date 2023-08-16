@@ -16,14 +16,16 @@ export default function App() {
     <UserContextProvider>
       <Navbar />
       <Toaster position="bottom-right" toastOptions={{ duration: 2000 }} />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/students" element={<StudentsIndex />} />
-        <Route path="/tutors" element={<TutorIndex />} />
-      </Routes>
+      <div className="bg">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/students" element={<StudentsIndex />} />
+          <Route path="/tutors" element={<TutorIndex />} />
+        </Routes>
+      </div>
     </UserContextProvider>
   );
 }

@@ -1,6 +1,8 @@
-import axios from 'axios';
-import { useState, useContext, useEffect } from 'react';
+import axios from "axios";
+import { useState, useContext, useEffect } from "react";
 import { UserContext } from "../User";
+import { MdOutlineClose } from "react-icons/md";
+import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 
 export default function StudentInfo({ studentDetails, setStudentDetails }) {
   const { user } = useContext(UserContext);
@@ -19,63 +21,79 @@ export default function StudentInfo({ studentDetails, setStudentDetails }) {
   const [showEditForm, setShowEditForm] = useState(false);
   useEffect(() => {
     async function fetchStudentDetails() {
-        try {
-            const token = document.cookie
-                .split("; ")
-                .find((row) => row.startsWith("token="))
-                .split("=")[1];
+      try {
+        const token = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("token="))
+          .split("=")[1];
 
-            if (!token) {
-                console.error("JWT token not found. Please login again.");
-                return;
-            }
-
-            // Set axios default headers
-            axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-            // Fetch student using the user ID
-            const studentRes = await axios.get("/api/students/me");
-            setStudentDetails(studentRes.data);
-        } catch (error) {
-            console.error("Error fetching student details:", error);
+        if (!token) {
+          console.error("JWT token not found. Please login again.");
+          return;
         }
+
+        // Set axios default headers
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+        // Fetch student using the user ID
+        const studentRes = await axios.get("/api/students/me");
+        setStudentDetails(studentRes.data);
+      } catch (error) {
+        console.error("Error fetching student details:", error);
+      }
     }
 
     fetchStudentDetails();
-}, []);
+  }, []);
 
-
-const handleInputChange = (e, setter) => {
+  const handleInputChange = (e, setter) => {
     setter((prevState) => ({ ...prevState, [e.target.name]: e.target.value }));
   };
+  function ordinalSuffix(number) {
+    if (number % 10 === 1 && number !== 11) {
+      return number + "st";
+    } else if (number % 10 === 2 && number !== 12) {
+      return number + "nd";
+    } else if (number % 10 === 3 && number !== 13) {
+      return number + "rd";
+    } else {
+      return number + "th";
+    }
+  }
+  
 
   const addSubjectToStudent = () => {
-    const updatedSubjects = [...studentForm.subjectsOfInterest, currentSubjectStudent];
+    const updatedSubjects = [
+      ...studentForm.subjectsOfInterest,
+      currentSubjectStudent,
+    ];
 
     setStudentForm((prevState) => ({
-        ...prevState,
-        subjectsOfInterest: updatedSubjects,
+      ...prevState,
+      subjectsOfInterest: updatedSubjects,
     }));
 
     setEditFormData((prevState) => ({
-        ...prevState,
-        subjectsOfInterest: updatedSubjects,
+      ...prevState,
+      subjectsOfInterest: updatedSubjects,
     }));
 
     setCurrentSubjectStudent("");
   };
 
   const removeSubjectFromStudent = (subject) => {
-    const updatedSubjects = studentForm.subjectsOfInterest.filter((s) => s !== subject);
+    const updatedSubjects = studentForm.subjectsOfInterest.filter(
+      (s) => s !== subject
+    );
 
     setStudentForm((prevState) => ({
-        ...prevState,
-        subjectsOfInterest: updatedSubjects,
+      ...prevState,
+      subjectsOfInterest: updatedSubjects,
     }));
 
     setEditFormData((prevState) => ({
-        ...prevState,
-        subjectsOfInterest: updatedSubjects,
+      ...prevState,
+      subjectsOfInterest: updatedSubjects,
     }));
   };
 
@@ -102,7 +120,10 @@ const handleInputChange = (e, setter) => {
   };
   const editStudent = async (studentId, studentData) => {
     try {
-      const response = await axios.put(`/api/students/${studentId}`, studentData);
+      const response = await axios.put(
+        `/api/students/${studentId}`,
+        studentData
+      );
       if (response.status === 200) {
         console.log("Student updated successfully:", response.data);
         setStudentDetails(response.data);
@@ -117,8 +138,8 @@ const handleInputChange = (e, setter) => {
 
   const handleEditInputChange = (e) => {
     setEditFormData((prevState) => ({
-        ...prevState,
-        [e.target.name]: e.target.value
+      ...prevState,
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -129,7 +150,9 @@ const handleInputChange = (e, setter) => {
     }
 
     try {
-      const response = await axios.delete(`/api/students/${studentDetails._id}`);
+      const response = await axios.delete(
+        `/api/students/${studentDetails._id}`
+      );
       if (response.status === 200) {
         console.log("Student successfully deleted");
         setStudentDetails(null);
@@ -144,8 +167,8 @@ const handleInputChange = (e, setter) => {
   return (
     <div>
       {!studentDetails && !showCreateForm && (
-        <button 
-          onClick={() => setShowCreateForm(true)} 
+        <button
+          onClick={() => setShowCreateForm(true)}
           className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition block w-full mt-4"
         >
           Add Student Profile
@@ -154,7 +177,9 @@ const handleInputChange = (e, setter) => {
 
       {showCreateForm && (
         <div>
-          <h3 className="text-2xl mb-4">Create Student Profile</h3>
+          <h3 className="text-2xl mb-4 mt-4 text-white">
+            Create Student Profile
+          </h3>
           <div className="flex space-x-4 mb-4">
             <input
               type="text"
@@ -171,13 +196,15 @@ const handleInputChange = (e, setter) => {
               Add
             </button>
           </div>
-          <ul className="list-disc pl-6">
+          <ul className="list-disc pl-6 text-white">
             {studentForm.subjectsOfInterest.map((subject, index) => (
               <li key={index}>
                 {subject}
-                <button onClick={() => removeSubjectFromStudent(subject)} className="ml-2 text-red-500">
-                  Remove
-                </button>
+                <MdOutlineClose
+                  onClick={() => removeSubjectFromStudent(subject)}
+                  className="ml-2 text-red-500 cursor-pointer"
+                  size={18}
+                />
               </li>
             ))}
           </ul>
@@ -199,66 +226,68 @@ const handleInputChange = (e, setter) => {
       )}
 
       {studentDetails && !showEditForm && (
-        <div>
-          <h3 className="text-2xl mb-4">Student Profile</h3>
-          <p className="text-lg mb-2">
-            Grade Level: {studentDetails.gradeLevel}
+        <div className="flex flex-col items-center">
+          <h3 className="text-2xl mb-4 text-white">Student Profile</h3>
+          <p className="text-lg mb-2 text-white">
+          Grade Level: {ordinalSuffix(studentDetails.gradeLevel)}
           </p>
-          <p className="text-lg">
-            Subjects of Interest:{" "}
-            {studentDetails.subjectsOfInterest.join(", ")}
+          <p className="text-lg mb-4 text-white">
+            Subjects Needed: {studentDetails.subjectsOfInterest.join(", ")}
           </p>
-          <button
-            onClick={deleteStudent}
-            className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline-red active:bg-red-700"
-          >
-            Delete Student Profile
-          </button>
-          <button
-            onClick={() => {
+          <div className="flex justify-between w-full">
+            <button
+              onClick={deleteStudent}
+              className="flex items-center transform transition duration-200 hover:scale-150"
+            >
+              <AiOutlineDelete className="mr-2 text-3xl text-red-500 hover:text-red-600" />
+            </button>
+            <button
+              onClick={() => {
                 setEditFormData({
-                    gradeLevel: studentDetails.gradeLevel,
-                    subjectsOfInterest: studentDetails.subjectsOfInterest
+                  gradeLevel: studentDetails.gradeLevel,
+                  subjectsOfInterest: studentDetails.subjectsOfInterest,
                 });
                 setShowEditForm(true);
-            }}
-            className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline-yellow active:bg-yellow-700"
-          >
-            Edit Student Profile
-          </button>
+              }}
+              className="flex items-center transform transition duration-200 hover:scale-150"
+            >
+              <AiOutlineEdit className="mr-2 text-3xl text-yellow-500 hover:text-yellow-600" />
+            </button>
+          </div>
         </div>
       )}
 
       {showEditForm && (
         <div>
-          <h3 className="text-2xl mb-4">Edit Student Profile</h3>
+          <h3 className="text-2xl mb-4 mt-4 text-white">
+            Edit Student Profile
+          </h3>
           <div className="flex space-x-4 mb-4">
             <input
-                type="text"
-                value={currentSubjectStudent}
-                onChange={(e) => setCurrentSubjectStudent(e.target.value)}
-                placeholder="Type a subject and add"
-                className="p-2 border rounded w-full"
+              type="text"
+              value={currentSubjectStudent}
+              onChange={(e) => setCurrentSubjectStudent(e.target.value)}
+              placeholder="Type a subject and add"
+              className="p-2 border rounded w-full"
             />
             <button
-                type="button"
-                onClick={addSubjectToStudent}
-                className="bg-blue-500 text-white p-2 rounded"
+              type="button"
+              onClick={addSubjectToStudent}
+              className="bg-blue-500 text-white p-2 rounded"
             >
-                Add
+              Add
             </button>
           </div>
-          <ul className="list-disc pl-6">
+          <ul className="list-disc pl-6 text-white">
             {editFormData.subjectsOfInterest.map((subject, index) => (
-                <li key={index}>
-                    {subject}
-                    <button
-                        onClick={() => removeSubjectFromStudent(subject)}
-                        className="ml-2 text-red-500"
-                    >
-                        Remove
-                    </button>
-                </li>
+              <li key={index}>
+                {subject}
+                <MdOutlineClose
+                  onClick={() => removeSubjectFromStudent(subject)}
+                  className="ml-2 text-red-500 cursor-pointer"
+                  size={18}
+                />
+              </li>
             ))}
           </ul>
           <input
@@ -284,6 +313,5 @@ const handleInputChange = (e, setter) => {
         </div>
       )}
     </div>
-);
+  );
 }
-

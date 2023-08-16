@@ -27,10 +27,15 @@ router.get('/', (req, res) => {
     .then(users => res.json(users))
 })
 
-router.get('/:id', (req, res) => {
+router.get('/:id', verifyToken, (req, res) => {
+    if (req.userId !== req.params.id) {
+        return res.status(403).send("You do not have permission to view this user.");
+    }
+    
     db.User.findById(req.params.id)
     .then(user => res.json(user))
-})
+    .catch(err => res.status(500).send("Internal Server Error"));
+});
 
 router.post('/', (req, res) => {
     db.User.create(req.body)

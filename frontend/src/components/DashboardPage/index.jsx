@@ -5,12 +5,16 @@ import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import StudentInfo from "../Student";
 import TutorInfo from "../Tutor";
+import { FiEyeOff, FiEye } from "react-icons/fi";
+import { AiOutlineEdit, AiOutlineDelete } from "react-icons/ai";
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { user, setUser } = useContext(UserContext);
   const [studentDetails, setStudentDetails] = useState(null);
   const [tutorDetails, setTutorDetails] = useState(null);
+  const [type, setType] = useState("password");
+  const [icon, setIcon] = useState(<FiEyeOff />);
   const [showEditForm, setShowEditForm] = useState(false);
   const [editFormData, setEditFormData] = useState({
     name: user?.name || "",
@@ -28,6 +32,15 @@ export default function Dashboard() {
   useEffect(() => {
     fetchStudentAndTutor();
   }, []);
+  const handleToggle = () => {
+    if (type === "password") {
+      setIcon(<FiEye />);
+      setType("text");
+    } else {
+      setIcon(<FiEyeOff />);
+      setType("password");
+    }
+  };
 
   const fetchStudentAndTutor = async () => {
     try {
@@ -80,10 +93,9 @@ export default function Dashboard() {
 
   const editProfile = async () => {
     try {
-      // Create a copy of the editFormData
+      
       const dataToSend = { ...editFormData };
 
-      // If password is empty, remove it from the data to be sent to the server
       if (!dataToSend.password) {
         delete dataToSend.password;
       }
@@ -102,10 +114,11 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center items-center py-8 relative">
+    <div className="min-h-screen bg-gradient-to-tr from-gray-800 to-gray-900 flex flex-col justify-center items-center py-8 relative">
       {showEditForm ? (
-        <div className="w-full max-w-3xl bg-white p-6 rounded-lg shadow-md">
-          <h1 className="text-4xl font-semibold mb-6 border-b-2 border-blue-500 pb-4">
+        // Edit Profile Section
+        <div className="w-full max-w-3xl bg-gray-700 p-8 rounded-lg shadow-md border border-gray-600">
+          <h1 className="text-4xl font-semibold mb-6 border-b-2 border-blue-400 pb-4 text-gray-200">
             Edit Profile
           </h1>
           <input
@@ -114,7 +127,7 @@ export default function Dashboard() {
             value={editFormData.name}
             onChange={handleEditInputChange}
             placeholder="Name"
-            className="p-2 border rounded w-full mb-4"
+            className="p-2 border rounded w-full mb-4 bg-gray-800 text-white"
           />
           <input
             type="email"
@@ -122,56 +135,75 @@ export default function Dashboard() {
             value={editFormData.email}
             onChange={handleEditInputChange}
             placeholder="Email"
-            className="p-2 border rounded w-full mb-4"
+            className="p-2 border rounded w-full mb-4 bg-gray-800 text-white"
           />
-          <input
-            type="password"
-            name="password"
-            value={editFormData.password}
-            onChange={handleEditInputChange}
-            placeholder="New Password (Leave blank to keep unchanged)"
-            className="p-2 border rounded w-full mb-4"
-          />
-          <button
-            onClick={() => {
-              editProfile();
-              setShowEditForm(false);
-            }}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline-blue"
-          >
-            Update Profile
-          </button>
-          <button
-            onClick={() => setShowEditForm(false)}
-            className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline-gray ml-4"
-          >
-            Cancel
-          </button>
+          <div className="relative mb-4">
+            <input
+              type={type}
+              name="password"
+              value={editFormData.password}
+              onChange={handleEditInputChange}
+              placeholder="New Password (Leave blank to keep unchanged)"
+              className="p-2 border rounded w-full bg-gray-800 text-white"
+            />
+            <span
+              className="absolute inset-y-0 right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-400"
+              onClick={handleToggle}
+            >
+              {icon}
+            </span>
+          </div>
+
+          <div className="flex justify-between">
+            <button
+              onClick={() => {
+                editProfile();
+                setShowEditForm(false);
+              }}
+              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline-blue"
+            >
+              Update Profile
+            </button>
+            <button
+              onClick={() => setShowEditForm(false)}
+              className="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline-gray"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       ) : (
         <>
-          <div className="w-full max-w-3xl flex justify-between mb-4">
-            <button
-              onClick={() => setShowEditForm(true)}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline-blue"
-            >
-              Edit Profile
-            </button>
-            <button
-              onClick={deleteProfile}
-              className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline-red active:bg-red-700"
-            >
-              Delete Profile
-            </button>
-          </div>
+          <div className="flex justify-center w-full mb-4">
+    <div className="flex items-center space-x-48">
+        <button
+          onClick={deleteProfile}
+          className="flex items-center transform transition duration-200"
+        >
+          <AiOutlineDelete className="mr-48 text-3xl text-red-500 hover:text-red-600" />
+        </button>
+        <button
+          onClick={() => setShowEditForm(true)}
+          className="flex items-center transform transition duration-200"
+        >
+          <AiOutlineEdit className="ml-24 text-3xl text-yellow-500 hover:text-yellow-600" />
+        </button>
+    </div>
+</div>
+
           {!!user && (
-            <div className="w-full max-w-3xl bg-white p-6 rounded-lg shadow-md">
-              <h1 className="text-4xl font-semibold mb-6 border-b-2 border-blue-500 pb-4">
-                Dashboard
-              </h1>
-              <h2 className="text-3xl mb-4">Welcome {user.name}!</h2>
-              <p className="text-xl mb-6">Email: {user.email}</p>
-  
+            <div className="w-full max-w-3xl bg-gray-700 p-8 rounded-lg shadow-md border border-gray-600">
+              <div className="text-center">
+                <h1 className="text-4xl font-semibold mb-6 border-b-2 border-blue-400 pb-4 text-gray-200">
+                  Dashboard
+                </h1>
+                <h2 className="text-3xl mb-2 text-gray-300">Welcome</h2>
+                <h3 className="text-2xl mb-4 text-gray-200">{user.name}</h3>
+                <p className="text-xl mb-6 text-gray-300">
+                  Email: {user.email}
+                </p>
+              </div>
+
               {!studentDetails && !tutorDetails && (
                 <>
                   <StudentInfo
@@ -184,14 +216,14 @@ export default function Dashboard() {
                   />
                 </>
               )}
-  
+
               {studentDetails && !tutorDetails && (
                 <StudentInfo
                   studentDetails={studentDetails}
                   setStudentDetails={setStudentDetails}
                 />
               )}
-  
+
               {!studentDetails && tutorDetails && (
                 <TutorInfo
                   tutorDetails={tutorDetails}
@@ -204,5 +236,4 @@ export default function Dashboard() {
       )}
     </div>
   );
-  
 }
