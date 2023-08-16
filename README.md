@@ -50,7 +50,7 @@ The following technologies were utilized in the development of **TutorPotential*
 </li>
 <li>Visit <a href="http://localhost:5173">http://localhost:5173</a> to access the application locally.</li>
 
-<li>Visit <a href="https://smashlabs-69ccb3a7e5a4.herokuapp.com/"> Live Site</a> Instead !</li>
+<li>Visit <a href="https://tutorpotential-c599fe98e7cd.herokuapp.com"> Live Site</a> Instead !</li>
 </ol>
 
 ## User Stories
