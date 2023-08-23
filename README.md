@@ -9,23 +9,23 @@ The following technologies were utilized in the development of **TutorPotential*
 
 - **MongoDB:** Our app's backbone is built on MongoDB, a robust NoSQL database that efficiently stores and manages all fighter details, ensuring lightning-fast performance and flexible schema design.
 
-- **Express.js:** A minimalistic and fast web application framework for Node.js, Express.js provides SmashLabs with the capabilities to handle routes, API creation, and server-side functionalities with ease.
+- **Express.js:** A minimalistic and fast web application framework for Node.js, Express.js provides TutorPotential with the capabilities to handle routes, API creation, and server-side functionalities with ease.
 
-- **React.js:** This front-end JavaScript library empowers SmashLabs with the ability to create a dynamic, interactive, and user-friendly interface. React's component-based architecture allows for efficient data rendering and state management.
+- **React.js:** This front-end JavaScript library empowers TutorPotential with the ability to create a dynamic, interactive, and user-friendly interface. React's component-based architecture allows for efficient data rendering and state management.
 
-- **JWT (JSON Web Tokens):** JWT is used in SmashLabs for securely transmitting information between parties as a JSON object. It's pivotal for authentication and authorization, ensuring that users are who they claim to be and granting them access only to what they should see.
+- **JWT (JSON Web Tokens):** JWT is used in TutorPotential for securely transmitting information between parties as a JSON object. It's pivotal for authentication and authorization, ensuring that users are who they claim to be and granting them access only to what they should see.
 
-- **React-toastify:** Provides SmashLabs with customizable notifications. Whether it's error messages, success messages, or informational pop-ups, React-toastify enhances user feedback mechanisms in an intuitive and stylish manner.
+- **React-toastify:** Provides TutorPotential with customizable notifications. Whether it's error messages, success messages, or informational pop-ups, React-toastify enhances user feedback mechanisms in an intuitive and stylish manner.
 
-- **bcrypt:** Security is a top priority in SmashLabs. bcrypt is employed for hashing passwords, ensuring user passwords stored in the database are encrypted and secure against potential breaches.
+- **bcrypt:** Security is a top priority in TutorPotential. bcrypt is employed for hashing passwords, ensuring user passwords stored in the database are encrypted and secure against potential breaches.
 
-- **TailwindCSS:** A utility-first CSS framework, TailwindCSS is leveraged in SmashLabs to create fast-loading, responsive designs with ease. Its modular approach allows for rapid UI development without bloated code.
+- **TailwindCSS:** A utility-first CSS framework, TailwindCSS is leveraged in TutorPotential to create fast-loading, responsive designs with ease. Its modular approach allows for rapid UI development without bloated code.
 
-- **Bootstrap:** An open-source CSS framework, Bootstrap aids in designing responsive and mobile-first projects. In SmashLabs, it complements TailwindCSS by providing additional styling options and components.
+- **Bootstrap:** An open-source CSS framework, Bootstrap aids in designing responsive and mobile-first projects. In TutorPotential, it complements TailwindCSS by providing additional styling options and components.
 
 - **Visual Studio Code:** Our developers rely on the powerful Integrated Development Environment (IDE), Visual Studio Code, to craft clean and efficient code, ensuring the app runs smoothly.
 
-- **Heroku:** For seamless deployment and hosting of the app, SmashLabs leverages Heroku, a trusted cloud platform, guaranteeing that users can access the app anytime, anywhere.
+- **Heroku:** For seamless deployment and hosting of the app, TutorPotential leverages Heroku, a trusted cloud platform, guaranteeing that users can access the app anytime, anywhere.
 
 
 
